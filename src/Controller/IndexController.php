@@ -2,13 +2,10 @@
 
 namespace App\Controller;
 
-use Symfony\Component\HttpFoundation\Response;
-
-class IndexController
+class IndexController extends WebController
 {
     public function index()
     {
-        return new Response('This is working!');
+        return $this->render('index.html.twig');
     }
-
 }
