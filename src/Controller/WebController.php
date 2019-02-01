@@ -19,5 +19,4 @@ abstract class WebController extends AbstractController
     {
         $this->auth = $auth;
     }
-
 }
