@@ -23,8 +23,14 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+
+
+    App\Listener\AuthListener:
+        tags:
+            - { name: kernel.event_listener, event: auth.user_login, method: createToken }
+
     auth:
-        class: App\Service\Auth\Auth
+        class: App\Service\Auth
 
 
 

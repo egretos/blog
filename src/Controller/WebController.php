@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Service\Auth\Auth;
+use App\Service\Auth;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 abstract class WebController extends AbstractController
 {
-    private $auth;
+    protected $auth;
 
     public function __construct(Auth $auth)
     {

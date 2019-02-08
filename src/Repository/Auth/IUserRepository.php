@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository\Person;
+namespace App\Repository\Auth;
 
 use App\Entity\User;
 
@@ -17,4 +17,12 @@ interface IUserRepository
      * @return User|null
      */
     public function getByEmail(string $email);
+
+    /**
+     * creates user
+     *
+     * @param User $user
+     * @return mixed
+     */
+    public function create(User $user);
 }
