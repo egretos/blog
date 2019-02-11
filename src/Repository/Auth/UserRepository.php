@@ -2,8 +2,10 @@
 
 namespace App\Repository\Auth;
 
+use App\Entity\Auth\Token;
 use App\Repository\BaseNeo4jRepository;
 use App\Entity\User;
+use GraphAware\Neo4j\OGM\Query;
 
 /**
  * Class UserRepository
@@ -24,14 +26,35 @@ class UserRepository extends BaseNeo4jRepository implements IUserRepository
      */
     public function getByEmail(string $email)
     {
-        return $this
+        $query = $this
             ->entityManager
-            ->getRepository(User::class)
-            ->findOneBy(['email' => $email]);
+            ->createQuery('
+            MATCH (user:User) WHERE user.email = {user_email}
+            OPTIONAL MATCH (user)-[:Has]->(token:Token)
+            RETURN user, collect(token) as tokens
+            ');
+
+        $query->setParameter('user_email', $email);
+        $query->addEntityMapping('user', User::class);
+        $query->addEntityMapping('tokens', Token::class, Query::HYDRATE_COLLECTION);
+
+        $results = $query->getResult();
+        $results = array_shift($results);
+
+        /** @var User $user */
+        $user = $results['user'];
+
+        if($results['tokens']) {
+            $user->setToken(array_shift($results['tokens']));
+        }
+
+        return $user;
     }
 
     /**
      * @inheritdoc
+     *
+     * @throws
      */
     public function create(User $user)
     {

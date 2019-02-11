@@ -2,17 +2,26 @@
 
 namespace App\Entity\Auth;
 
-use App\Entity\User;
 use GraphAware\Neo4j\OGM\Annotations as OGM;
 use GraphAware\Neo4j\OGM\Common\Collection;
+use App\Entity\User;
 
 /**
  * Class Token
  * @package App\Entity\Auth
  * @OGM\Node(label="Token")
+ *
+ * @property integer $id
+ * @property string $resource
+ * @property string $data
+ * @property integer $expireAt
+ * @property string $type;
  */
 class Token
 {
+    const TYPE_AUTH = 'auth';
+    const TYPE_API = 'api';
+
     /**
      * @var integer
      * @OGM\GraphId()
@@ -41,7 +50,26 @@ class Token
      * @var string
      * @OGM\Property(type="string")
      */
-    public $type = 'auth';
+    public $type = self::TYPE_AUTH;
+
+    /**
+     * @var User[]|Collection
+     * @OGM\Relationship(type="Has", direction="INCOMING", mappedBy="tokens", collection=true, targetEntity="User")
+     */
+    protected $users;
+
+    public function __construct()
+    {
+        $this->users = new Collection;
+    }
+
+    /**
+     * @return User[]|Collection
+     */
+    public function users()
+    {
+        return $this->users;
+    }
 
     /**
      * @param integer|bool $timeout
@@ -68,5 +96,4 @@ class Token
     {
         return (string) $this->data;
     }
-
 }

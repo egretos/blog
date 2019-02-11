@@ -3,7 +3,7 @@
 namespace App\Listener;
 
 use App\Event\Auth\LoginEvent;
-use App\Repository\Auth\TokenRepository;
+use App\Service\Auth;
 
 /**
  * Class AuthListener
@@ -11,8 +11,16 @@ use App\Repository\Auth\TokenRepository;
  */
 class AuthListener
 {
+    private $authService;
+
+    public function __construct(Auth $authService)
+    {
+        $this->authService = $authService;
+    }
+
+    // TODO make it async
     public function createToken(LoginEvent $event)
     {
-
+        $this->authService->updateToken($event->getUser());
     }
 }
