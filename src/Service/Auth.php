@@ -72,6 +72,12 @@ class Auth
         return $token;
     }
 
+    /**
+     * @param User $user
+     * @return User
+     *
+     * @throws
+     */
     public function updateToken(User $user)
     {
         if (!$user->hasAuthToken()) {
@@ -80,6 +86,7 @@ class Auth
             $token = $user->getToken();
         }
         $token->expireAt = $this->tokenLiveTime;
+        $this->tokenRepository->update($token);
 
         $this->sessionService->set($this->sessionTokenKey, (string) $token);
         $this->sessionService->set($this->sessionAuthUser, json_encode($user));
