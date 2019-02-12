@@ -4,7 +4,7 @@ namespace App\Repository\Auth;
 
 use App\Entity\Auth\Token;
 use App\Repository\BaseNeo4jRepository;
-use App\Entity\User;
+use App\Entity\Auth\User;
 use GraphAware\Neo4j\OGM\Query;
 
 /**

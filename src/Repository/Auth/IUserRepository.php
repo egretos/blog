@@ -2,7 +2,7 @@
 
 namespace App\Repository\Auth;
 
-use App\Entity\User;
+use App\Entity\Auth\User;
 
 interface IUserRepository
 {

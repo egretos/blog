@@ -3,8 +3,9 @@
 namespace App\Service;
 
 use App\Entity\Auth\Token;
-use App\Entity\User;
+use App\Entity\Auth\User;
 use App\Event\Auth\LoginEvent;
+use App\Event\Auth\TokenExpiredEvent;
 use App\Repository\Auth\IUserRepository;
 use App\Repository\Auth\TokenRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -24,7 +25,7 @@ class Auth
     private $eventDispatcher;
 
     private $sessionTokenKey = 'auth_token';
-    private $sessionAuthUser = 'auth_user';
+    private $sessionUserKey = 'auth_user';
 
     private $userRepository;
     private $tokenRepository;
@@ -47,6 +48,12 @@ class Auth
         }
     }
 
+    /**
+     * @param $email
+     * @param $password
+     *
+     * @return bool
+     */
     public function login($email, $password)
     {
         if (!$user = $this->userRepository->getByEmail($email)) {
@@ -62,6 +69,10 @@ class Auth
         }
     }
 
+    /**
+     * @param null $user
+     * @return Token
+     */
     public function createToken($user = null)
     {
         $token = new Token;
@@ -70,6 +81,55 @@ class Auth
         $this->tokenRepository->create($token, $user);
 
         return $token;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAuthenticated()
+    {
+        if ($this->sessionService->has($this->sessionTokenKey)) {
+            $token = $this->getTokenFromSession();
+
+            if (!$token->isExpired()) {
+                return true;
+            }
+            $this->eventDispatcher->dispatch('auth.token_expired', new TokenExpiredEvent($token));
+        }
+        return false;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function user()
+    {
+        if (!$this->isAuthenticated()) {
+            return null;
+        }
+
+        return $this->getUserFromSession();
+    }
+
+    /**
+     * @return User
+     */
+    public function getUserFromSession()
+    {
+        $user = new User;
+        $user->load(json_decode($this->sessionService->get($this->sessionUserKey), true));
+        return $user;
+    }
+
+    /**
+     * @return Token
+     */
+    public function getTokenFromSession()
+    {
+        $token = new Token;
+        $token->load(json_decode($this->sessionService->get($this->sessionTokenKey), true));
+        return $token;
+
     }
 
     /**
@@ -88,22 +148,16 @@ class Auth
         $token->expireAt = $this->tokenLiveTime;
         $this->tokenRepository->update($token);
 
-        $this->sessionService->set($this->sessionTokenKey, (string) $token);
-        $this->sessionService->set($this->sessionAuthUser, json_encode($user));
+        $this->sessionService->set($this->sessionTokenKey, json_encode($token));
+        $this->sessionService->set($this->sessionUserKey, json_encode($user));
 
         return $user;
     }
 
     public function logout()
     {
-        if (!$this->sessionService->isStarted()) {
-            $this->sessionService->start();
-        }
-
         $this->sessionService->remove($this->sessionTokenKey);
-        $this->sessionService->remove($this->sessionAuthUser);
-
-        $this->sessionService->save();
+        $this->sessionService->remove($this->sessionUserKey);
     }
 
     public function register(User $user)

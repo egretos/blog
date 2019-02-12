@@ -2,7 +2,7 @@
 
 namespace App\Event\Auth;
 
-use App\Entity\User;
+use App\Entity\Auth\User;
 use Symfony\Component\EventDispatcher\Event;
 
 /**

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Auth;
 
-use App\Entity\Auth\Token;
+use App\Entity\Model;
 use GraphAware\Neo4j\OGM\Annotations as OGM;
 
 /**
@@ -15,7 +15,7 @@ use GraphAware\Neo4j\OGM\Annotations as OGM;
  * @property string $email
  * @property string $password
  */
-class User
+class User extends Model
 {
     /**
      * @var int

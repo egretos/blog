@@ -2,9 +2,9 @@
 
 namespace App\Entity\Auth;
 
+use App\Entity\Model;
 use GraphAware\Neo4j\OGM\Annotations as OGM;
 use GraphAware\Neo4j\OGM\Common\Collection;
-use App\Entity\User;
 
 /**
  * Class Token
@@ -17,7 +17,7 @@ use App\Entity\User;
  * @property integer $expireAt
  * @property string $type;
  */
-class Token
+class Token extends Model
 {
     const TYPE_AUTH = 'auth';
     const TYPE_API = 'api';
@@ -41,10 +41,10 @@ class Token
     public $data;
 
     /**
-     * @var integer
+     * @var integer|bool
      * @OGM\Property(type="int")
      */
-    public $expireAt;
+    public $expireAt = false;
 
     /**
      * @var string
@@ -90,6 +90,11 @@ class Token
         }
 
         return $this;
+    }
+
+    public function isExpired()
+    {
+        return $this->expireAt && ($this->expireAt < time());
     }
 
     public function __toString()

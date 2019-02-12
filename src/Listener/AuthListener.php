@@ -3,6 +3,7 @@
 namespace App\Listener;
 
 use App\Event\Auth\LoginEvent;
+use App\Event\Auth\TokenExpiredEvent;
 use App\Service\Auth;
 
 /**
@@ -22,5 +23,10 @@ class AuthListener
     public function createToken(LoginEvent $event)
     {
         $this->authService->updateToken($event->getUser());
+    }
+
+    public function logout()
+    {
+        $this->authService->logout();
     }
 }

@@ -28,6 +28,7 @@ services:
     App\Listener\AuthListener:
         tags:
             - { name: kernel.event_listener, event: auth.user_login, method: createToken }
+            - { name: kernel.event_listener, event: auth.token_expired, method: logout }
 
     auth:
         class: App\Service\Auth

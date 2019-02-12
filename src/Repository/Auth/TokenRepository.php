@@ -3,7 +3,7 @@
 namespace App\Repository\Auth;
 
 use App\Entity\Auth\Token;
-use App\Entity\User;
+use App\Entity\Auth\User;
 use App\Repository\BaseNeo4jRepository;
 
 class TokenRepository extends BaseNeo4jRepository
@@ -15,7 +15,9 @@ class TokenRepository extends BaseNeo4jRepository
      */
     public function create(Token $token, User $user = null)
     {
-        $token->users()->add($user);
+        if ($user) {
+            $token->users()->add($user);
+        }
         $this->update($token);
 
         return true;
