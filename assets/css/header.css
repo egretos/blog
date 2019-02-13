@@ -8,6 +8,7 @@ header .header {
 }
 
 header ul.sticky-tags {
+    display: none;
     position: fixed;
     margin: 0;
     padding-left: inherit;
