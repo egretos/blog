@@ -1,0 +1,43 @@
+header .header {
+    font-family: 'Quicksand', sans-serif;
+
+    display: flex;
+
+    background-color: #303030;
+    padding: 10px;
+}
+
+header ul.sticky-tags {
+    position: fixed;
+    margin: 0;
+    padding-left: inherit;
+}
+
+header ul.sticky-tags li {
+    margin-top: 5px;
+
+    padding: 5px 5px 5px 5px;
+    list-style: none;
+
+    text-align: left;
+    color: #222222;
+    font-size: 16px;
+    font-family: 'Indie Flower', cursive;
+    opacity: 10;
+}
+
+header ul.sticky-tags li:nth-child(1) {
+    background-color: #f8a30d;
+}
+header ul.sticky-tags li:nth-child(2) {
+    background-color: #2ff80a;
+}
+header ul.sticky-tags li:nth-child(3) {
+    background-color: #0c6ff8;
+}
+header ul.sticky-tags li:nth-child(4) {
+    background-color: #f8a30d;
+}
+header ul.sticky-tags li:nth-child(5) {
+    background-color: #f84238;
+}

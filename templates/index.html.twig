@@ -1,10 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    {{ include('layout/header.html.twig') }}
-</body>
-</html>
+{% extends 'layout/main.html.twig' %}
+
+{% block links %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('index') }}
+{% endblock %}
+
+{% block content %}
+    <div class="title">
+        <h1>Hello!</h1>
+        <h2>My name is Ihor Melnychuk,</h2>
+        <h3>And I`m PHP backend developer.</h3>
+        <hr>
+    </div>
+{% endblock %}

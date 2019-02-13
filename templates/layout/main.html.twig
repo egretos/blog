@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    {% block links %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+</head>
+<body>
+    {{ include('layout/header.html.twig') }}
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
